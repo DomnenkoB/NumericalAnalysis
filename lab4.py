@@ -9,21 +9,18 @@ def d_f(x):
 	return np.log(x) + 1
 
 def find_tau(x):
-	# log (x) = const - 1
-	return np.exp(x - 1)
+	return math.exp(x - 1)
 
 def get_coefficients(a, b):
 	c_1 = (f(a) - f(b)) / (a - b)
 
-	#tau = find_tau(f(a) - f(b) / (a - b))
-	#print (tau)
-	tau = 3.561 #THIS KOSTYL` WAS WRITTEN BECAUSE BLOODY NUMPY CHANGES FUNCTION SIGNATURE
-
+	tau = find_tau(f(a) - f(b) / (a - b))
 	c_0 = - (c_1 * a + c_1 * tau - f(a) - f(tau)) / 2
 
-	#print(c_0, c_1)
-
 	return [c_0, c_1]
+
+def Q_0(M, m):
+	return (m + M) / 2
 
 def Q_1(coef, x):
 	c_0 = coef[0]
@@ -39,12 +36,12 @@ def OLS(samples):
 
 	return b
 
-def f_OLS(x):
-	return - 1.53055319 + 1.20961922 * x + 0.1380164 * x * x
+def f_OLS(b, x):
+	res = 0
+	for i in range(len(b)):
+		res += b.item(i, 0) * np.power(x, i)
+	return res
 
-#d_f (eps) = f(a) - f(b) / a - b find eps
-y = -f(7)
-print (y)
 a = 1
 b = 7
 tau = find_tau(f(a) - f(b) / (a - b))
@@ -55,24 +52,21 @@ x = np.arange(-4, 10, 0.01)
 
 y_samples = [[(x / 100) * np.log((x / 100))] for x in range(100, 700, 6)]
 
+m = min([(x / 100)*np.log(x/100) for x in range(100, 700, 6)])
+M = max([(x / 100)*np.log(x/100) for x in range(100, 700, 6)])
+print(m, M)
 
-OLS(y_samples)
+
+c = OLS(y_samples)
+
+print(len(c))
+
 plt.title('x * log (x)')
 plt.grid(True)
 plt.ylim(-4, 15)
 plt.plot(x, f(x), label = "x*log(x)")
-plt.plot(x, f_OLS(x), label = "OLS")
+plt.plot(x, f_OLS(c, x), label = "OLS")
 plt.plot(x, Q_1(coef, x), label = "Q_1")
+plt.plot([a, b], [Q_0(M, m), Q_0(M, m)], label = "Q_0")
 plt.legend()
 plt.show()
-#telecsope
-#Разложить в ряд полиномом Чебишева
-
-#Закодить регрессию для приличия
-
-#f(x) = sum {0, inf} (d_j * T_j(x)), [a, b]
-
-#[-1, 1]: f(x) = sum {0, inf} (a_j * pow(x, j)) = Q_n(x)
-
-#Q_n(x) ~ Q_[n-1] (x) = |T_n(x)| <= pow(2, (1 - n))
-

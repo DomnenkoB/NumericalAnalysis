@@ -1,4 +1,7 @@
 import math
+import numpy as np
+import numpy.linalg as linalg
+from numpy.linalg import inv
 
 def converges(M):
 	for i in range(0, len(M)):
@@ -9,6 +12,23 @@ def converges(M):
 		if row_sum > math.fabs(M[i][i]):
 			return False
 	return True
+
+def det(A):
+	Q, R = linalg.qr(np.array(A))
+	print(Q)
+	print(R)
+
+	det_A = 1
+	n = len(M)
+	for i in range(0, n):
+		det_A *= R[i][i]
+	return det_A
+
+def cond(A):
+	norm_A = linalg.norm(np.array(A), 1)
+	inv_A = inv(np.array(A))
+	norm_inv_A = linalg.norm(np.array(inv_A), 1)
+	return norm_inv_A * norm_A
 
 def norm(x):
 	res = 0
@@ -77,10 +97,9 @@ def jacobi(A, b):
 
 	x_prev = [0 for i in range(0, n)]
 	x_cur = [0 for i in range(0, n)]
-	dif = [1 for i in range(0, n)]
-
-
-	while math.fabs(norm(dif)) > eps:
+	x_prev[0] = 1
+	
+	while math.fabs(norm(x_prev) - norm(x_cur)) > eps:
 		#it += 1
 		for i in range(0, n):
 			x_prev[i] = x_cur[i]
@@ -91,10 +110,7 @@ def jacobi(A, b):
 				if i != j:
 					r += R[i][j] * x_prev[j]
 			x_cur[i] = (1 / D[i][i]) * (b[i] - r)
-
-		for i in range(0, n):
-			dif[i] = x_cur[i] - x_prev[i]
-
+			
 	return(x_cur)
 
 
@@ -109,6 +125,10 @@ M = [
 
 d = [1, 1, 1, 1]
 
+print(det(M))
+
+print(cond(M))
+
 print(tridiag(M, d))
 
 M = [
@@ -121,3 +141,18 @@ M = [
 d = [1, 1, 1, 1]
 
 print(jacobi(M, d))
+# Метод простой итерации решения нелинейных уравнений  (любое нелинейное уравнение)
+# Макс, мин собственное значение матрицы 4х4 методом скалярных произведений
+# k = r/q => r = k*q
+# k = 1.669266565∙10-7
+# q = 9.179612522∙106
+#r = 1.532322026
+
+
+arr = [1, 3, 5, 7, 9, 11, 13, 15]
+
+for i in range(len(arr)):
+	for j in range (len(arr)):
+		for k in range (len(arr)):
+			if arr[i] + arr[j] + arr[k] == 30:
+				print (True)
