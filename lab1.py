@@ -42,32 +42,32 @@ def newton(a, b, eps):
 			print('Answer:')
 			print((x_n))
 
-	def modified_newton(a, b, eps):
-		x = random.uniform(a, b)
+def modified_newton(a, b, eps):
+	x = random.uniform(a, b)
 
-		#convergence_crt
+	#convergence_crt
 
-		print(math.fabs(1.0 + alpha(x) * d_f(x)))
-		if (math.fabs(1.0 + alpha(x) * d_f(x)) > 1):
-			print('Method diverges, x value:')
-			print(x)
-		else:
-			# in order to iterate we decrease the value of x_n
-			x_n = x
-			x_n -= 2 * eps
-		iter_cnt = 0
+	print(math.fabs(1.0 + alpha(x) * d_f(x)))
+	if (math.fabs(1.0 + alpha(x) * d_f(x)) > 1):
+		print('Method diverges, x value:')
+		print(x)
+	else:
+		# in order to iterate we decrease the value of x_n
+		x_n = x
+		x_n -= 2 * eps
+	iter_cnt = 0
 
-		#'iteration' process
+	#'iteration' process
 
-		while math.fabs(x_n - x) > eps:
-			x = x_n
-			x_n = x - (f(x) * eps) / (f(x + eps) - f(x))
-			iter_cnt += 1
-			print('Iteration: ' + str(iter_cnt) + ', x value:')
-			print(x_n)
+	while math.fabs(x_n - x) > eps:
+		x = x_n
+		x_n = x - (f(x) * eps) / (f(x + eps) - f(x))
+		iter_cnt += 1
+		print('Iteration: ' + str(iter_cnt) + ', x value:')
+		print(x_n)
 
-		print('Answer:')
-		print((x_n))
+	print('Answer:')
+	print((x_n))
 
 
 newton(-1, 1, 0.001)
